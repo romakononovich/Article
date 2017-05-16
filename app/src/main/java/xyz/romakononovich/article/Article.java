@@ -58,6 +58,6 @@ public class Article {
 
     @Override
     public String toString() {
-        return "Article: " + author + " title: " + title;
+        return "[Article]: " + author + "\n[Title]: " + title + "\n\n[Description]: " +description + "\n\n******************";
     }
 }

@@ -3,6 +3,7 @@ package xyz.romakononovich.article;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private View container;
     private List<Article> articleList = new ArrayList<>();
     private Spinner spinner;
+    private String source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         list.add("BBC News");
         list.add("BBC Sport");
 
-        List<String> listAPI = new ArrayList<>();
+        final List<String> listAPI = new ArrayList<>();
         listAPI.add("abc-news-au");
         listAPI.add("al-jazeera-english");
         listAPI.add("ars-technica");
@@ -67,7 +69,11 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                parse(list.get(position));
+                showProgressBar();
+                textView.setText("");
+                source=listAPI.get(position);
+                parse(source);
+
             }
 
             @Override
@@ -77,12 +83,13 @@ public class MainActivity extends AppCompatActivity {
         });
         f1 = (FrameLayout) findViewById(R.id.progress_bar);
         textView = (TextView) findViewById(R.id.myText);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        parse("bbc-sport");
+
 
     }
 
@@ -94,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         builder.url(url+source+api);
+
 
         //c0b21a0e305f4ad494f9b55db4e9d43d
         Request request = builder.build();
@@ -109,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     Log.d(TAG, "source: " + jsonObject.get("source"));
                     JSONArray articles = jsonObject.getJSONArray("articles");
+                    articleList.clear();
                     for(int i = 0; i < articles.length(); i++){
                         JSONObject jsonObject1 = new JSONObject(articles.get(i).toString());
                         Article article = new Article();
@@ -120,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            showProgressBar();
                             setArticles();
                             hideProgressBar();
                         }
