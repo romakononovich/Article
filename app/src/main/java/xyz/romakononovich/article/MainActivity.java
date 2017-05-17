@@ -3,6 +3,8 @@ package xyz.romakononovich.article;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Article> articleList = new ArrayList<>();
     private Spinner spinner;
     private String source;
+    private RecyclerView recyclerView;
+    private RvAdaptepSearchItem adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +70,18 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+        f1 = (FrameLayout) findViewById(R.id.progress_bar);
+        //textView = (TextView) findViewById(R.id.myText);
+        recyclerView = (RecyclerView) findViewById(R.id.rv);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 showProgressBar();
-                textView.setText("");
+
                 source=listAPI.get(position);
                 parse(source);
 
@@ -81,8 +92,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        f1 = (FrameLayout) findViewById(R.id.progress_bar);
-        textView = (TextView) findViewById(R.id.myText);
+
 
     }
 
@@ -117,13 +127,13 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     Log.d(TAG, "source: " + jsonObject.get("source"));
                     JSONArray articles = jsonObject.getJSONArray("articles");
-                    articleList.clear();
                     for(int i = 0; i < articles.length(); i++){
                         JSONObject jsonObject1 = new JSONObject(articles.get(i).toString());
                         Article article = new Article();
                         article.setAuthor(jsonObject1.get("author").toString());
                         article.setDescription(jsonObject1.get("description").toString());
                         article.setTitle(jsonObject1.get("title").toString());
+                        article.setPublishedAt(jsonObject1.get("publishedAt").toString());
                         articleList.add(article);
                     }
                     runOnUiThread(new Runnable() {
@@ -172,11 +182,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setArticles(){
-        StringBuilder stringBuilder = new StringBuilder(articleList.size()*2);
-        for(Article article: articleList){
-            stringBuilder.append(article.toString());
-            stringBuilder.append("\n");
-        }
-        textView.setText(stringBuilder.toString());
+        adapter = new RvAdaptepSearchItem(articleList);
+        recyclerView.setAdapter(adapter);
+//        StringBuilder stringBuilder = new StringBuilder(articleList.size()*2);
+//        for(Article article: articleList){
+//            stringBuilder.append(article.toString());
+//            stringBuilder.append("\n");
+//        }
+//        textView.setText(stringBuilder.toString());
     }
 }

@@ -20,18 +20,26 @@
         />
 
     </LinearLayout>
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="55dp"
+        android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp">
-    <TextView
-        android:id="@+id/myText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:layout_marginTop="10dp"
-        android:textAlignment="center"/>
-    </ScrollView>
+        >
+
+    </android.support.v7.widget.RecyclerView>
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="50dp">-->
+    <!--<TextView-->
+        <!--android:id="@+id/myText"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Hello World!"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:textAlignment="center"/>-->
+    <!--</ScrollView>-->
     <FrameLayout
         android:id="@+id/progress_bar"
         android:layout_width="match_parent"
