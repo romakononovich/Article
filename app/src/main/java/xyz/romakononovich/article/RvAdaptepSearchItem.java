@@ -1,20 +1,27 @@
 package xyz.romakononovich.article;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 
 public class RvAdaptepSearchItem extends RecyclerView.Adapter<RvAdaptepSearchItem.ItemViewHolder> {
     List<Article> articleList;
+    Context context;
 
-    public RvAdaptepSearchItem(List<Article> articleList) {
+
+    public RvAdaptepSearchItem(List<Article> articleList, Context context) {
         this.articleList = articleList;
+        this.context=context;
     }
 
     @Override
@@ -30,7 +37,11 @@ public class RvAdaptepSearchItem extends RecyclerView.Adapter<RvAdaptepSearchIte
         holder.tvAuthor.setText(articleList.get(position).getAuthor());
         holder.tvDate.setText(articleList.get(position).getPublishedAt());
         holder.tvDecription.setText(articleList.get(position).getDescription());
-
+        Picasso.with(context)
+                .load(articleList.get(position).getUrlToImage())
+                .placeholder(R.drawable.item_picture)
+                .into(holder.imageView);
+        Log.d("IMG",articleList.get(position).getUrlToImage());
     }
 
     @Override

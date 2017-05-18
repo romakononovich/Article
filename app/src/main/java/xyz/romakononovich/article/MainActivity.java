@@ -1,5 +1,6 @@
 package xyz.romakononovich.article;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private String source;
     private RecyclerView recyclerView;
     private RvAdaptepSearchItem adapter;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.spinner);
 
         final List<String> list = new ArrayList<>();
-        list.add("ABC News");
+        list.add("CNBC");
         list.add("Al Jazeera English");
         list.add("Ars Technica");
         list.add("Associated Press");
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         list.add("BBC Sport");
 
         final List<String> listAPI = new ArrayList<>();
-        listAPI.add("abc-news-au");
+        listAPI.add("cnbc");
         listAPI.add("al-jazeera-english");
         listAPI.add("ars-technica");
         listAPI.add("associated-press");
@@ -123,17 +127,20 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+
                 try {
                     JSONObject jsonObject = new JSONObject(response.body().string());
                     Log.d(TAG, "source: " + jsonObject.get("source"));
                     JSONArray articles = jsonObject.getJSONArray("articles");
+                    articleList.clear();
                     for(int i = 0; i < articles.length(); i++){
                         JSONObject jsonObject1 = new JSONObject(articles.get(i).toString());
                         Article article = new Article();
                         article.setAuthor(jsonObject1.get("author").toString());
                         article.setDescription(jsonObject1.get("description").toString());
                         article.setTitle(jsonObject1.get("title").toString());
-                        article.setPublishedAt(jsonObject1.get("publishedAt").toString());
+                        article.setPublishedAt(formateDate(jsonObject1.get("publishedAt").toString()));
+                        article.setUrlToImage(jsonObject1.get("urlToImage").toString());
                         articleList.add(article);
                     }
                     runOnUiThread(new Runnable() {
@@ -159,17 +166,16 @@ public class MainActivity extends AppCompatActivity {
     public void hideProgressBar() {
         f1.setVisibility(View.GONE);
     }
-
-    public void onUserRecieved(final User user) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String current = textView.getText().toString();
-                current = current + "\n" + "User name: " + user.name + "User age: " + user.age;
-                textView.setText(current);
-            }
-        });
+    public String formateDate(String date) {
+        if (date.length()>5) {
+            String month = date.substring(5, 7);
+            String dateI = date.substring(8, 10);
+            String hour = date.substring(11, 13);
+            String minute = date.substring(14, 16);
+            return month + "/" + dateI + "  " + hour + ":" + minute;
+        } else return "-----";
     }
+
 
     public static class User {
         String name;
@@ -182,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setArticles(){
-        adapter = new RvAdaptepSearchItem(articleList);
+        adapter = new RvAdaptepSearchItem(articleList, getBaseContext());
         recyclerView.setAdapter(adapter);
 //        StringBuilder stringBuilder = new StringBuilder(articleList.size()*2);
 //        for(Article article: articleList){

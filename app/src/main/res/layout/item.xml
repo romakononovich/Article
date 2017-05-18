@@ -3,19 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="120dp"
     android:id="@+id/item"
-    android:background="@android:color/darker_gray">
+    android:background="@android:color/white"
+    android:layout_marginBottom="10dp"
+    android:paddingLeft="5dp"
+    android:elevation="3dp">
 
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="-15dp"/>
+        android:layout_marginTop="-15dp"
+        android:src="@drawable/item_picture"/>
 
     <TextView
         android:id="@+id/title"
@@ -24,14 +27,18 @@
         tools:text="Заголовок Титла"
         android:layout_marginStart="13dp"
         android:layout_marginTop="7dp"
+        android:textSize="18sp"
+        android:maxLines="2"
+        android:textColor="@android:color/black"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/imageView" />
 
     <TextView
         android:id="@+id/author"
-        android:layout_width="wrap_content"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         tools:text="Автор"
+        android:textSize="10sp"
         android:layout_below="@+id/title"
         android:layout_alignStart="@+id/title"
         android:layout_marginTop="4dp" />
@@ -41,10 +48,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Дата"
+        android:textSize="10sp"
         android:layout_alignBaseline="@+id/author"
         android:layout_alignBottom="@+id/author"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="50dp" />
+        android:layout_marginEnd="20dp" />
 
     <TextView
         android:id="@+id/description"
@@ -53,6 +61,7 @@
         tools:text="Описание"
         android:maxLines="3"
         android:layout_below="@+id/author"
+        android:textColor="@android:color/black"
         android:layout_alignStart="@+id/author"
         android:layout_marginTop="5dp"/>
 </RelativeLayout>
